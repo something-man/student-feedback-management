@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard & AI Analytics — College Feedback Management System</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Chart.js for High-Fidelity Clean SaaS Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body class="dashboard-layout">
+
+  <!-- ==========================================================================
+       LEFT SIDEBAR (Admin Central Command)
+       ========================================================================== -->
+  <aside class="dashboard-sidebar">
+    <!-- Brand Logo -->
+    <div class="sidebar-brand">
+      <div class="brand-icon-box" style="width:34px; height:34px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+        </svg>
+      </div>
+      <div>
+        <div style="font-family:var(--font-heading); font-weight:800; font-size:0.9375rem; color:var(--navy-900);">College Feedback</div>
+        <div style="font-size:0.6875rem; color:var(--blue-600); font-weight:700;">ADMIN CONTROL CENTER</div>
+      </div>
+    </div>
+
+    <!-- Navigation Items -->
+    <div class="sidebar-nav-container">
+      <span class="nav-section-label">Central Management</span>
+      
+      <!-- 1. Dashboard -->
+      <a href="admin-dashboard.html" class="sidebar-nav-item active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+
+      <!-- 2. Create Feedback -->
+      <a href="#create-feedback" class="sidebar-nav-item" onclick="openModal('createFeedbackModal'); return false;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="16"></line>
+          <line x1="8" y1="12" x2="16" y2="12"></line>
+        </svg>
+        <span>Create Feedback</span>
+        <span class="badge badge-blue" style="margin-left:auto; font-size:0.6875rem;">+ New</span>
+      </a>
+
+      <!-- 3. Published Forms -->
+      <a href="#feedback-forms-section" class="sidebar-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+        <span>Published Forms</span>
+        <span class="nav-badge" id="adminFormsCountBadge">5</span>
+      </a>
+
+      <!-- 4. Complaints -->
+      <a href="#recent-issues-table" class="sidebar-nav-item" onclick="filterAdminIssues('COMPLAINT');">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <span>Complaints</span>
+        <span class="nav-badge" id="adminComplaintsNavBadge" style="background:var(--status-red-bg); color:var(--status-red-text);">0</span>
+      </a>
+
+      <!-- 5. Requests -->
+      <a href="#recent-issues-table" class="sidebar-nav-item" onclick="filterAdminIssues('REQUEST');">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        <span>Requests</span>
+        <span class="nav-badge" id="adminRequestsNavBadge" style="background:var(--status-yellow-bg); color:var(--status-yellow-text);">0</span>
+      </a>
+
+      <span class="nav-section-label" style="margin-top:16px;">Intelligence & System</span>
+
+      <!-- 6. AI Analytics -->
+      <a href="#ai-insights-block" class="sidebar-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14.93V18a1 1 0 0 1-2 0v-1.07A8 8 0 0 1 4.07 10H3a1 1 0 0 1 0-2h1.07A8 8 0 0 1 11 1.07V2a1 1 0 0 1 2 0v-.93A8 8 0 0 1 19.93 8H21a1 1 0 0 1 0 2h-1.07A8 8 0 0 1 13 16.93z"></path>
+        </svg>
+        <span>AI Analytics</span>
+        <span class="badge badge-purple" style="margin-left:auto; font-size:0.6875rem;">Active</span>
+      </a>
+
+      <!-- 7. Reports -->
+      <a href="#reports" class="sidebar-nav-item" onclick="openReportsModal(); return false;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>Reports</span>
+      </a>
+
+      <!-- 8. Settings -->
+      <a href="#" class="sidebar-nav-item" onclick="showToast('Admin Settings', 'System configurations & department roles verified.', 'info'); return false;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span>Settings</span>
+      </a>
+
+      <!-- 9. Logout -->
+      <a href="login.html" class="sidebar-nav-item" onclick="authAPI.logout(); return false;" style="color:var(--status-red-text); margin-top:auto;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span>Logout</span>
+      </a>
+    </div>
+
+    <!-- Admin User Footer -->
+    <div class="sidebar-user-footer">
+      <div class="sidebar-user-info">
+        <div class="user-avatar-circle" style="background:var(--navy-gradient);">AD</div>
+        <div class="user-text-meta">
+          <div class="user-display-name">Admin Office</div>
+          <div class="user-role-sub">Chief Academic Registrar</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       MAIN DASHBOARD CONTENT
+       ========================================================================== -->
+  <div class="dashboard-main">
+    <!-- Topbar Header -->
+    <header class="dashboard-topbar">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="topbar-search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-light);">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" placeholder="Search feedback, issues, analytics...">
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <!-- Date / Term Filter Dropdown -->
+        <select class="chart-filter-select" style="padding: 6px 12px; font-size: 0.8125rem;">
+          <option>Fall Term 2026</option>
+          <option>Spring Term 2026</option>
+          <option>Academic Year 2025–26</option>
+        </select>
+
+        <!-- Notification Icon with Badge -->
+        <button class="btn btn-ghost btn-icon" style="position:relative;" onclick="openNotificationsModal()" aria-label="Notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="topbarUnreadDot" style="display:none; position:absolute; top:6px; right:6px; width:8px; height:8px; background:var(--status-red-dot); border-radius:50%; border:2px solid #FFFFFF;"></span>
+        </button>
+
+        <!-- Admin Profile Pill -->
+        <div style="display:flex; align-items:center; gap:8px; background:var(--bg-subtle); padding:4px 10px 4px 6px; border-radius:var(--radius-full); border:1px solid var(--border-subtle);">
+          <div class="user-avatar-circle" style="width:28px; height:28px; font-size:0.75rem;">AD</div>
+          <span style="font-size:0.8125rem; font-weight:700; color:var(--navy-900);">Admin Portal</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Content Body -->
+    <main class="dashboard-body">
+      
+      <!-- Top Welcome Header -->
+      <div class="welcome-header">
+        <div>
+          <h1>Welcome, Admin!</h1>
+          <p>Monitor feedback, identify issues and make data-driven decisions.</p>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="badge badge-green">
+            <span class="badge-dot"></span> AI Engine Live & Analyzing
+          </span>
+          <span class="badge badge-blue">Verified PostgreSQL Feed</span>
+        </div>
+      </div>
+
+      <!-- Quick Actions Toolbar (4 Action Buttons) -->
+      <div class="quick-actions-bar">
+        <span class="quick-actions-label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          Quick Actions:
+        </span>
+        <button class="btn btn-accent btn-sm" onclick="openModal('createFeedbackModal')">
+          + Create Feedback
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('recent-issues-table').scrollIntoView({behavior:'smooth'}); filterAdminIssues('COMPLAINT');">
+          ⚠ Manage Complaints
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('recent-issues-table').scrollIntoView({behavior:'smooth'}); filterAdminIssues('REQUEST');">
+          📩 Manage Requests
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="openReportsModal()">
+          📊 Generate Report
+        </button>
+      </div>
+
+      <!-- Summary KPI Cards (5 Clean Cards) -->
+      <div class="kpi-grid-5">
+        <!-- 1. Total Feedback -->
+        <div class="kpi-card">
+          <div class="kpi-top-row">
+            <span class="kpi-title">Total Feedback</span>
+            <div class="kpi-icon-pill" style="background:var(--blue-50); color:var(--blue-600);">📝</div>
+          </div>
+          <div class="kpi-value" id="kpiTotalFeedback">0</div>
+          <div class="kpi-trend trend-up">
+            Live Submissions
+          </div>
+        </div>
+
+        <!-- 2. Average Rating -->
+        <div class="kpi-card">
+          <div class="kpi-top-row">
+            <span class="kpi-title">Average Rating</span>
+            <div class="kpi-icon-pill" style="background:var(--status-green-bg); color:var(--status-green-dot);">⭐</div>
+          </div>
+          <div class="kpi-value" id="kpiAvgRating">0.0 / 5</div>
+          <div class="kpi-trend trend-up">
+            Calculated Average
+          </div>
+        </div>
+
+        <!-- 3. Active Complaints -->
+        <div class="kpi-card">
+          <div class="kpi-top-row">
+            <span class="kpi-title">Active Complaints</span>
+            <div class="kpi-icon-pill" style="background:var(--status-yellow-bg); color:var(--status-yellow-dot);">⚠</div>
+          </div>
+          <div class="kpi-value" id="kpiActiveComplaints">0</div>
+          <div class="kpi-trend trend-down">
+            Open Tickets
+          </div>
+        </div>
+
+        <!-- 4. Pending Requests -->
+        <div class="kpi-card">
+          <div class="kpi-top-row">
+            <span class="kpi-title">Pending Requests</span>
+            <div class="kpi-icon-pill" style="background:var(--status-purple-bg); color:var(--status-purple-dot);">📩</div>
+          </div>
+          <div class="kpi-value" id="kpiPendingRequests">0</div>
+          <div class="kpi-trend trend-down">
+            Awaiting Review
+          </div>
+        </div>
+
+        <!-- 5. High Priority Issues -->
+        <div class="kpi-card" style="border-left: 3.5px solid var(--status-red-dot);">
+          <div class="kpi-top-row">
+            <span class="kpi-title" style="color:var(--status-red-text);">High Priority</span>
+            <div class="kpi-icon-pill" style="background:var(--status-red-bg); color:var(--status-red-dot);">🔴</div>
+          </div>
+          <div class="kpi-value" id="kpiHighPriority" style="color:var(--status-red-text);">0</div>
+          <div class="kpi-trend trend-alert">
+            Requires Attention
+          </div>
+        </div>
+      </div>
+
+      <!-- Conceptual AI Analytics Processing Pipeline Stepper -->
+      <div class="ai-pipeline-card">
+        <div class="ai-pipeline-header">
+          <div class="ai-pipeline-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14.93V18a1 1 0 0 1-2 0v-1.07A8 8 0 0 1 4.07 10H3a1 1 0 0 1 0-2h1.07A8 8 0 0 1 11 1.07V2a1 1 0 0 1 2 0v-.93A8 8 0 0 1 19.93 8H21a1 1 0 0 1 0 2h-1.07A8 8 0 0 1 13 16.93z"></path>
+            </svg>
+            Intelligent Governance Engine — Continuous Decision Pipeline
+          </div>
+          <span style="font-size:0.75rem; color:#94A3B8; font-weight:600;">Autonomous Pattern & Sentiment Extraction</span>
+        </div>
+
+        <div class="ai-pipeline-stepper">
+          <div class="ai-step-pill">1. Feedback Responses</div>
+          <span class="ai-step-arrow">&rarr;</span>
+          <div class="ai-step-pill">2. Data Analysis</div>
+          <span class="ai-step-arrow">&rarr;</span>
+          <div class="ai-step-pill">3. Sentiment Analysis</div>
+          <span class="ai-step-arrow">&rarr;</span>
+          <div class="ai-step-pill">4. Recurring Issue Detection</div>
+          <span class="ai-step-arrow">&rarr;</span>
+          <div class="ai-step-pill">5. Priority Identification</div>
+          <span class="ai-step-arrow">&rarr;</span>
+          <div class="ai-step-pill highlight">6. AI Recommendations</div>
+          <span class="ai-step-arrow">&rarr;</span>
+          <div class="ai-step-pill" style="background:#10B981; color:#FFFFFF; border-color:#059669;">7. Administrative Action</div>
+        </div>
+      </div>
+
+      <!-- ==========================================================================
+           ROW 1 CHARTS: Feedback Overview (Line) + Feedback by Category (Bar)
+           ========================================================================== -->
+      <div class="charts-grid-2col" id="feedback-overview-section">
+        <!-- Chart 1: Feedback Overview (Line Chart) -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue-600);">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              Feedback Overview
+            </h3>
+            <select class="chart-filter-select" id="trendTimeFilter" onchange="updateOverviewTrend(this.value)">
+              <option value="6m">Last 6 Months ▼</option>
+              <option value="3m">Last 3 Months ▼</option>
+              <option value="1y">Full Year ▼</option>
+            </select>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="feedbackOverviewChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Feedback by Category (Bar Chart) -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--navy-900);">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+              Feedback by Category
+            </h3>
+            <span class="badge badge-neutral">1,248 Total Responses</span>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="categoryVolumeChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================================================
+           ROW 2 CHARTS: Average Rating by Category + Complaint Status (Donut) + Complaint Priority
+           ========================================================================== -->
+      <div class="charts-grid-3col">
+        <!-- Chart 3: Average Rating by Category (Bar Chart with lower rating indicators) -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#F59E0B;">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              Average Rating by Category
+            </h3>
+            <span class="badge badge-yellow">Benchmark: 4.0</span>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="categoryRatingChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: Complaint Status (Donut Chart) -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--status-green-dot);">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 14 14"></polyline>
+              </svg>
+              Complaint Status
+            </h3>
+            <span class="badge badge-neutral">32 Total Tickets</span>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="complaintStatusChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 5: Complaint Priority (Horizontal Bar Chart) -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--status-red-dot);">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              Complaint Priority
+            </h3>
+            <span class="badge badge-red">Active Breakdown</span>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="complaintPriorityChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================================================
+           ROW 3: Faculty Performance Bar Chart + Student Sentiment Visualization
+           ========================================================================== -->
+      <div class="charts-grid-2col">
+        <!-- Chart 6: Faculty Rating Overview -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue-600);">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              Faculty Rating Overview
+            </h3>
+            <select class="chart-filter-select" id="deptFacultyFilter" onchange="updateFacultyChart(this.value)">
+              <option value="all">Department: All ▼</option>
+              <option value="cs">Computer Science ▼</option>
+              <option value="me">Mechanical Eng. ▼</option>
+              <option value="ec">Electronics ▼</option>
+            </select>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="facultyRatingChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Student Feedback Sentiment Section -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--status-purple-dot);">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+              </svg>
+              Student Feedback Sentiment
+            </h3>
+            <span class="badge badge-purple">NLP Engine</span>
+          </div>
+
+          <p style="font-size:0.8125rem; color:var(--text-muted); margin-bottom:12px;">
+            Based on submitted qualitative comments analyzed across all active feedback forms.
+          </p>
+
+          <!-- Visual Bar Representation -->
+          <div class="sentiment-container">
+            <div class="sentiment-bar-track">
+              <div class="sentiment-seg-pos" style="width: 62%;" title="Positive (62%)"></div>
+              <div class="sentiment-seg-neu" style="width: 25%;" title="Neutral (25%)"></div>
+              <div class="sentiment-seg-neg" style="width: 13%;" title="Negative (13%)"></div>
+            </div>
+
+            <div class="sentiment-legend-grid">
+              <div class="sentiment-legend-item">
+                <div class="sentiment-emoji">😊</div>
+                <div class="sentiment-pct" style="color:var(--status-green-dot);">62%</div>
+                <div style="font-size:0.75rem; font-weight:600; color:var(--navy-900);">Positive</div>
+              </div>
+              <div class="sentiment-legend-item">
+                <div class="sentiment-emoji">😐</div>
+                <div class="sentiment-pct" style="color:var(--navy-600);">25%</div>
+                <div style="font-size:0.75rem; font-weight:600; color:var(--navy-900);">Neutral</div>
+              </div>
+              <div class="sentiment-legend-item">
+                <div class="sentiment-emoji">😟</div>
+                <div class="sentiment-pct" style="color:var(--status-red-dot);">13%</div>
+                <div style="font-size:0.75rem; font-weight:600; color:var(--navy-900);">Negative</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================================================
+           AI INSIGHTS & RECURRING ISSUES SECTION (Highlighted AI Module)
+           ========================================================================== -->
+      <section class="ai-insights-section" id="ai-insights-block">
+        <div class="section-title-bar" style="border-bottom:none; margin-bottom:16px;">
+          <h3 style="font-size:1.25rem;">
+            🤖 AI-Generated Insights
+          </h3>
+          <button class="btn btn-primary btn-sm" onclick="showToast('AI Deep Dive', 'Opening multi-variable correlation report & sentiment cluster map.', 'info')">
+            VIEW AI ANALYSIS
+          </button>
+        </div>
+
+        <!-- 4 Intelligent Insight Cards -->
+        <div class="ai-insights-grid">
+          <div class="ai-insight-item">
+            <span style="font-size:1.1rem; line-height:1;">📌</span>
+            <div>
+              <strong>Infrastructure Trends:</strong> Infrastructure complaints increased by <strong>18% this month</strong>, primarily driven by Block C electrical and Wi-Fi tickets.
+            </div>
+          </div>
+
+          <div class="ai-insight-item">
+            <span style="font-size:1.1rem; line-height:1;">📌</span>
+            <div>
+              <strong>Hostel Satisfaction:</strong> Hostel-related feedback has the <strong>lowest average rating (3.2 / 5)</strong> across dining hygiene and hot water availability.
+            </div>
+          </div>
+
+          <div class="ai-insight-item">
+            <span style="font-size:1.1rem; line-height:1;">📌</span>
+            <div>
+              <strong>Faculty Excellence:</strong> Faculty feedback shows an overall <strong>positive trend (+0.3 vs last term)</strong> with 88% student satisfaction in course clarity.
+            </div>
+          </div>
+
+          <div class="ai-insight-item">
+            <span style="font-size:1.1rem; line-height:1;">📌</span>
+            <div>
+              <strong>SLA Warning:</strong> <strong>4 complaints have remained unresolved for more than 7 days</strong>. Escalation flags dispatched to estate maintenance.
+            </div>
+          </div>
+        </div>
+
+        <!-- Highlighted AI Recommendation -->
+        <div class="ai-recommendation-box">
+          <div style="display:flex; align-items:flex-start; gap:12px; flex:1;">
+            <div style="font-size:1.4rem; line-height:1;">💡</div>
+            <div>
+              <div style="font-weight:700; color:var(--status-purple-text); font-size:0.9375rem; margin-bottom:2px;">
+                Executive Action Recommendation
+              </div>
+              <div style="font-size:0.875rem; color:var(--navy-900);">
+                Prioritize hostel maintenance and review recurring infrastructure complaints to raise campus satisfaction by an estimated +0.4 points next semester.
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-accent btn-sm" onclick="showToast('Action Plan Created', 'Work order generated and assigned to Estate Management.', 'success')">
+            Approve Action Plan
+          </button>
+        </div>
+      </section>
+
+      <!-- Recurring Issues Detected by AI Section -->
+      <section class="dashboard-section" style="margin-bottom:28px;">
+        <div class="section-title-bar">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--status-red-dot);">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            Recurring Issues Detected by AI
+          </h3>
+          <span class="badge badge-red">Pattern Matching Enabled</span>
+        </div>
+
+        <div class="recurring-issues-grid">
+          <!-- Card 1: Wi-Fi Connectivity -->
+          <div class="recurring-card">
+            <div>
+              <div class="recurring-card-top">
+                <span class="badge badge-red">Priority: High</span>
+                <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Cluster #1</span>
+              </div>
+              <h4>⚠ Wi-Fi Connectivity</h4>
+              <p style="font-size:0.875rem; color:var(--text-secondary); margin:8px 0 16px 0;">
+                <strong>23 complaints</strong> reported across Block B, CS Labs, and Central Library 3rd floor.
+              </p>
+            </div>
+            <button class="btn btn-secondary btn-sm" style="width:100%;" onclick="openIssueModal('#102', 'Wi-Fi Connectivity', 'Infrastructure', 'High', 'IT Dept', 'Multiple access point drops during peak lecture hours.')">
+              View Details
+            </button>
+          </div>
+
+          <!-- Card 2: Hostel Maintenance -->
+          <div class="recurring-card">
+            <div>
+              <div class="recurring-card-top">
+                <span class="badge badge-red">Priority: High</span>
+                <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Cluster #2</span>
+              </div>
+              <h4>⚠ Hostel Maintenance</h4>
+              <p style="font-size:0.875rem; color:var(--text-secondary); margin:8px 0 16px 0;">
+                <strong>18 complaints</strong> citing water cooler filters, plumbing pressure, and room lighting.
+              </p>
+            </div>
+            <button class="btn btn-secondary btn-sm" style="width:100%;" onclick="openIssueModal('#103', 'Hostel Maintenance', 'Hostel', 'High', 'Maintenance Team', 'Water cooler filtration and bathroom fixtures.')">
+              View Details
+            </button>
+          </div>
+
+          <!-- Card 3: Classroom Equipment -->
+          <div class="recurring-card">
+            <div>
+              <div class="recurring-card-top">
+                <span class="badge badge-yellow">Priority: Medium</span>
+                <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Cluster #3</span>
+              </div>
+              <h4>⚠ Classroom Equipment</h4>
+              <p style="font-size:0.875rem; color:var(--text-secondary); margin:8px 0 16px 0;">
+                <strong>11 complaints</strong> regarding Lab 3 HDMI audio sync and projector brightness.
+              </p>
+            </div>
+            <button class="btn btn-secondary btn-sm" style="width:100%;" onclick="openIssueModal('#105', 'Classroom Equipment', 'Classroom', 'Medium', 'Facilities Cell', 'Projector bulb replacement and HDMI audio patch.')">
+              View Details
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           FEEDBACK FORMS MANAGEMENT TABLE (Phase 6 Workflow)
+           ========================================================================== -->
+      <section class="dashboard-section" id="feedback-forms-section" style="margin-bottom:28px;">
+        <div class="section-title-bar">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue-600);">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            Feedback Forms &amp; Evaluation Campaigns
+          </h3>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-accent btn-sm" onclick="openModal('createFeedbackModal')">
+              + Create New Form
+            </button>
+          </div>
+        </div>
+
+        <div class="custom-table-container">
+          <table class="custom-table" id="adminFeedbackFormsTable">
+            <thead>
+              <tr>
+                <th>Form Title</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Target</th>
+                <th>Responses</th>
+                <th>Avg Rating</th>
+                <th>Deadline</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminFeedbackFormsTableBody">
+              <tr>
+                <td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);">
+                  Loading feedback forms...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ==========================================================================
+           RECENT ISSUES TABLE
+           ========================================================================== -->
+      <section class="dashboard-section" id="recent-issues-table">
+        <div class="section-title-bar">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--navy-900);">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            Complaints &amp; Service Requests Tracking
+          </h3>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;" id="adminIssueFilterBtns">
+            <button class="btn btn-primary btn-sm" id="filterBtnAll" onclick="filterAdminIssues('ALL')">All</button>
+            <button class="btn btn-secondary btn-sm" id="filterBtnComplaint" onclick="filterAdminIssues('COMPLAINT')">Complaints</button>
+            <button class="btn btn-secondary btn-sm" id="filterBtnRequest" onclick="filterAdminIssues('REQUEST')">Requests</button>
+            <button class="btn btn-secondary btn-sm" id="filterBtnHigh" onclick="filterAdminIssues('HIGH_PRIORITY')">High Priority</button>
+            <button class="btn btn-secondary btn-sm" id="filterBtnInProgress" onclick="filterAdminIssues('IN_PROGRESS')">In Progress</button>
+            <button class="btn btn-secondary btn-sm" id="filterBtnResolved" onclick="filterAdminIssues('RESOLVED')">Resolved</button>
+          </div>
+        </div>
+
+        <div class="custom-table-container">
+          <table class="custom-table" id="adminRecentIssuesTable">
+            <thead>
+              <tr>
+                <th>Ticket / Req ID</th>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Subject / Title</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Assigned Cell</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminRecentIssuesTableBody">
+              <tr>
+                <td colspan="9" style="text-align:center; padding:24px; color:var(--text-muted);">
+                  Loading complaints &amp; requests...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 1: CREATE FEEDBACK FORM & DYNAMIC QUESTION BUILDER (Admin)
+       ========================================================================== -->
+  <div class="modal-overlay" id="createFeedbackModal">
+    <div class="modal-box" style="max-width: 700px;">
+      <div class="modal-header">
+        <div>
+          <h3>Create New Feedback Form</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Dynamic question builder with draft &amp; publish workflows</div>
+        </div>
+        <button class="btn btn-ghost btn-icon" data-close-modal aria-label="Close">✕</button>
+      </div>
+
+      <form id="adminCreateFeedbackForm" onsubmit="return false;">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Form Title <span style="color:red;">*</span></label>
+            <input type="text" id="createFormTitle" class="form-control" placeholder="e.g. Mid-Semester Faculty & Course Evaluation" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description / Instructions</label>
+            <textarea id="createFormDesc" class="form-control" rows="2" placeholder="Explain the purpose of this evaluation campaign..."></textarea>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label class="form-label">Evaluation Category <span style="color:red;">*</span></label>
+              <select id="createFormCategory" class="form-control" required>
+                <option value="COURSE">Course & Academic Feedback</option>
+                <option value="FACULTY">Faculty Teaching Performance</option>
+                <option value="INFRASTRUCTURE">Campus Infrastructure & Labs</option>
+                <option value="HOSTEL">Hostel & Canteen Services</option>
+                <option value="LIBRARY">Library & Resources</option>
+                <option value="GENERAL">General Institution Feedback</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Target Audience</label>
+              <select id="createFormAudience" class="form-control">
+                <option value="STUDENTS">All Enrolled Students</option>
+                <option value="FACULTY">Faculty Members Only</option>
+                <option value="BOTH">Both Students & Faculty</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label class="form-label">Target Department (Optional)</label>
+              <select id="createFormDepartment" class="form-control">
+                <option value="">All Departments</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Electronics & Communication">Electronics & Communication</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+                <option value="Electrical Engineering">Electrical Engineering</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Submission Deadline <span style="color:red;">*</span></label>
+              <input type="date" id="createFormDeadline" class="form-control" required>
+            </div>
+          </div>
+
+          <!-- Dynamic Questions Builder -->
+          <div class="form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <label class="form-label" style="margin-bottom:0;">Form Questions &amp; Criteria (<span id="questionCountDisplay">3</span>)</label>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="addQuestionBuilderRow()">
+                + Add Question
+              </button>
+            </div>
+            
+            <div id="adminQuestionListContainer">
+              <!-- Question rows dynamically populated by JS -->
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="checkbox-label">
+              <input type="checkbox" id="createFormAnonymous" checked style="accent-color:var(--blue-600);">
+              <span style="font-size:0.875rem;">Enable anonymous submissions for privacy (masked user identities)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="button" class="btn btn-secondary" onclick="submitCreateForm('DRAFT')">
+            💾 Save as Draft
+          </button>
+          <button type="button" class="btn btn-accent" onclick="submitCreateForm('PUBLISHED')">
+            🚀 Publish Form
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 2: ASSIGN FEEDBACK FORM TO USERS / DEPARTMENT
+       ========================================================================== -->
+  <div class="modal-overlay" id="assignFeedbackModal">
+    <div class="modal-box" style="max-width: 540px;">
+      <div class="modal-header">
+        <div>
+          <h3>Assign Feedback Form</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted);" id="assignModalFormTitle">Mid-Semester Evaluation</div>
+        </div>
+        <button class="btn btn-ghost btn-icon" data-close-modal aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="assignModalFormId">
+        
+        <div class="form-group">
+          <label class="form-label">Assign To Role</label>
+          <select id="assignModalAudience" class="form-control">
+            <option value="STUDENTS">All Students</option>
+            <option value="FACULTY">All Faculty</option>
+            <option value="BOTH">All Students &amp; Faculty</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Target Department</label>
+          <select id="assignModalDepartment" class="form-control">
+            <option value="">All Departments</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Mechanical Engineering">Mechanical Engineering</option>
+            <option value="Electronics & Communication">Electronics & Communication</option>
+            <option value="Civil Engineering">Civil Engineering</option>
+            <option value="Electrical Engineering">Electrical Engineering</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Updated Deadline (Optional)</label>
+          <input type="date" id="assignModalDeadline" class="form-control">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+        <button type="button" class="btn btn-accent" onclick="submitFeedbackAssignment()">
+          Confirm &amp; Assign
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 3: VIEW FEEDBACK RESPONSES (Anonymous Masking Enforced)
+       ========================================================================== -->
+  <div class="modal-overlay" id="viewResponsesModal">
+    <div class="modal-box" style="max-width: 760px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="viewResponsesModalTitle">Feedback Responses</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted);" id="viewResponsesModalMeta">Loading responses...</div>
+        </div>
+        <button class="btn btn-ghost btn-icon" data-close-modal aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="responsesListContainer" style="max-height: 60vh; overflow-y:auto; padding-right:4px;">
+          <!-- Response cards injected here -->
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 4: FORM REAL-TIME ANALYTICS BREAKDOWN
+       ========================================================================== -->
+  <div class="modal-overlay" id="formAnalyticsModal">
+    <div class="modal-box" style="max-width: 720px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="formAnalyticsTitle">Campaign Analytics</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted);" id="formAnalyticsSubtitle">Live PostgreSQL metrics</div>
+        </div>
+        <button class="btn btn-ghost btn-icon" data-close-modal aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- 3 KPIs Grid -->
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:20px;">
+          <div style="background:var(--bg-subtle); padding:14px; border-radius:var(--radius-md); text-align:center;">
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Total Responses</div>
+            <div style="font-size:1.4rem; font-weight:800; color:var(--navy-900); margin-top:2px;" id="analyticsTotalResponses">0</div>
+          </div>
+          <div style="background:var(--bg-subtle); padding:14px; border-radius:var(--radius-md); text-align:center;">
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Response Rate</div>
+            <div style="font-size:1.4rem; font-weight:800; color:var(--blue-600); margin-top:2px;" id="analyticsResponseRate">0%</div>
+          </div>
+          <div style="background:var(--bg-subtle); padding:14px; border-radius:var(--radius-md); text-align:center;">
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Average Rating</div>
+            <div style="font-size:1.4rem; font-weight:800; color:#F59E0B; margin-top:2px;" id="analyticsAvgRating">0.0 / 5</div>
+          </div>
+        </div>
+
+        <!-- Rating Distribution -->
+        <div style="margin-bottom:20px;">
+          <h4 style="font-size:0.9375rem; margin-bottom:10px;">Rating Distribution</h4>
+          <div id="analyticsRatingDistribution">
+            <!-- 5 to 1 star bars -->
+          </div>
+        </div>
+
+        <!-- Question Performance Breakdown -->
+        <div>
+          <h4 style="font-size:0.9375rem; margin-bottom:10px;">Per-Question Insights</h4>
+          <div id="analyticsQuestionsBreakdown">
+            <!-- Questions injected here -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: ISSUE DETAILS, LIFECYCLE MANAGEMENT & RESOLUTION VERIFICATION
+       ========================================================================== -->
+  <div class="modal-overlay" id="issueDetailModal">
+    <div class="modal-box" style="max-width: 680px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="issueModalTitle">Issue Details</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted);" id="issueModalSubtitle">Category: General</div>
+        </div>
+        <button class="btn btn-ghost btn-icon" data-close-modal aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="issueModalId">
+        <input type="hidden" id="issueModalType">
+
+        <!-- Issue Subject and Description -->
+        <div class="form-group">
+          <label class="form-label" style="margin-bottom:4px;">Subject / Title</label>
+          <div id="issueModalSubject" style="font-weight:700; color:var(--navy-900); font-size:0.9375rem;">—</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="margin-bottom:4px;">Description / Details</label>
+          <div id="issueModalDesc" style="background:var(--bg-subtle); padding:10px 14px; border-radius:var(--radius-sm); font-size:0.875rem; color:var(--navy-900);">
+            —
+          </div>
+        </div>
+
+        <div id="issueModalMeta" style="font-size:0.75rem; color:var(--text-muted); margin-bottom:14px;">
+          <!-- Created at & SLA target -->
+        </div>
+
+        <!-- Status & Priority Controls -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label">Update Status <span style="color:red;">*</span></label>
+            <select class="form-control" id="issueStatusUpdate">
+              <option value="PENDING">🟡 PENDING — Awaiting Action</option>
+              <option value="IN_PROGRESS">🔵 IN_PROGRESS — Working on it</option>
+              <option value="ESCALATED">🔴 ESCALATED — Elevated Priority</option>
+              <option value="RESOLVED">🟢 RESOLVED — Pending Verification</option>
+              <option value="CLOSED">⚫ CLOSED — Verified &amp; Archived</option>
+              <option value="REJECTED">⚪ REJECTED — Request Declined</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Priority Level <span style="color:red;">*</span></label>
+            <select class="form-control" id="issuePriorityUpdate">
+              <option value="LOW">🟢 LOW — Non-urgent</option>
+              <option value="MEDIUM">🟡 MEDIUM — Standard SLA (48h)</option>
+              <option value="HIGH">🔴 HIGH — Urgent Priority (24h)</option>
+              <option value="CRITICAL">🔥 CRITICAL — Immediate Intervention</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Assigned Department / Cell -->
+        <div class="form-group">
+          <label class="form-label">Assigned Cell / Department</label>
+          <select class="form-control" id="issueAssignedCell">
+            <option value="IT Department">IT Department</option>
+            <option value="Campus Facilities Cell">Campus Facilities Cell</option>
+            <option value="Hostel Administration">Hostel Administration</option>
+            <option value="Library Cell">Library Cell</option>
+            <option value="Academic Office">Academic Office</option>
+            <option value="Transport Cell">Transport Cell</option>
+            <option value="Catering Cell">Catering Cell</option>
+            <option value="Unassigned">Unassigned / Pending Routing</option>
+          </select>
+        </div>
+
+        <!-- Public Visibility Toggle (Complaints only) -->
+        <div class="form-group" id="issuePublicVisibilityContainer" style="margin-bottom:14px;">
+          <label class="checkbox-label">
+            <input type="checkbox" id="issuePublicToggle" style="accent-color:var(--blue-600);">
+            <span style="font-size:0.875rem;">Display on Public Grievance Portal Feed (Zero-PII student privacy preserved)</span>
+          </label>
+        </div>
+
+        <!-- Resolution Notes -->
+        <div class="form-group">
+          <label class="form-label">Resolution Notes / Action Summary</label>
+          <textarea class="form-control" id="issueResolutionNote" rows="2" placeholder="Document action taken or instructions for student/department (logged to audit trail)..."></textarea>
+        </div>
+
+        <!-- Dynamic Audit Trail & Progress Timeline -->
+        <div>
+          <label class="form-label" style="margin-bottom:6px;">Issue Lifecycle &amp; Audit Trail</label>
+          <div class="issue-timeline" id="adminIssueTimelineList" style="max-height:180px; overflow-y:auto; padding-right:4px;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn btn-primary" onclick="saveAdminIssueUpdate()">
+            💾 Save Changes
+          </button>
+          <button type="button" class="btn btn-accent" id="btnVerifyCloseIssue" onclick="verifyAndCloseAdminIssue()" style="background:#10B981; border-color:#059669;">
+            ✓ Verify Resolution &amp; Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 5: REPORTS GENERATION & EXPORT SUITE (All 7 Types, PDF, Excel, Print)
+       ========================================================================== -->
+  <div class="modal-overlay" id="reportsModal">
+    <div class="modal-box" style="max-width: 900px; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <div>
+          <h3>📊 Campus Evaluation &amp; Governance Reports</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Generate, filter, preview, and export official reports (PDF, Excel, Print)</div>
+        </div>
+        <button class="btn btn-ghost btn-icon" data-close-modal aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body" style="overflow-y: auto; flex: 1;">
+        <!-- Filter Controls Form -->
+        <div style="background:var(--bg-subtle); padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-subtle); margin-bottom:16px;">
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:12px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.75rem; font-weight:700;">1. Report Type <span style="color:red;">*</span></label>
+              <select id="reportTypeSelect" class="form-control" style="font-size:0.8125rem;">
+                <option value="OVERALL">Overall Feedback Report</option>
+                <option value="FACULTY">Faculty Performance Report</option>
+                <option value="COURSE">Course Feedback Report</option>
+                <option value="INFRASTRUCTURE">Infrastructure Report</option>
+                <option value="COMPLAINT">Complaint &amp; Grievance Report</option>
+                <option value="REQUEST">Service Request Report</option>
+                <option value="AI_INSIGHTS">AI Insights &amp; Intelligence Report</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.75rem; font-weight:700;">2. Department</label>
+              <select id="reportDeptSelect" class="form-control" style="font-size:0.8125rem;">
+                <option value="">All Departments</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Electronics & Communication">Electronics & Communication</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+                <option value="Electrical Engineering">Electrical Engineering</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.75rem; font-weight:700;">3. Category</label>
+              <select id="reportCategorySelect" class="form-control" style="font-size:0.8125rem;">
+                <option value="">All Categories</option>
+                <option value="COURSE">Course Feedback</option>
+                <option value="FACULTY">Faculty Performance</option>
+                <option value="INFRASTRUCTURE">Campus Infrastructure</option>
+                <option value="HOSTEL">Hostel &amp; Mess</option>
+                <option value="LIBRARY">Library Resources</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" style="font-size:0.75rem; font-weight:700;">4. Term / Batch</label>
+              <select id="reportTermSelect" class="form-control" style="font-size:0.8125rem;">
+                <option value="">Current Academic Year</option>
+                <option value="Fall Term 2026">Fall Term 2026</option>
+                <option value="Spring Term 2026">Spring Term 2026</option>
+                <option value="2024-2028 Batch">2024–2028 Batch</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <button type="button" class="btn btn-primary btn-sm" onclick="executeGenerateReport()">
+              📊 Generate Report Data
+            </button>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="executeDownloadReportPdf()">
+                📥 Download PDF
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="executeDownloadReportExcel()">
+                📑 Download Excel
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="executePrintReport()">
+                🖨 Print
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Report Preview Area -->
+        <div id="reportPreviewContainer" style="border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:18px; background:#FFFFFF;">
+          <div style="text-align:center; padding:32px; color:var(--text-muted);">
+            Click <strong>"Generate Report Data"</strong> above to preview live institutional metrics and data rows.
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 6: NOTIFICATIONS MANAGEMENT DRAWER (Admin)
+       ========================================================================== -->
+  <div class="modal-overlay" id="notificationsModal">
+    <div class="modal-box" style="max-width: 560px;">
+      <div class="modal-header">
+        <div>
+          <h3>🔔 System Notifications</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted);" id="notificationsModalSubtitle">Real-time alerts &amp; SLA escalations</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="markAllNotificationsAsRead()" style="font-size:0.75rem;">
+            Mark All Read
+          </button>
+          <button class="btn btn-ghost btn-icon" data-close-modal aria-label="Close">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div id="notificationsListContainer" style="max-height:60vh; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+          <div style="text-align:center; padding:24px; color:var(--text-muted);">
+            Loading notifications...
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Demo HUD -->
+  <div class="demo-switcher-hud">
+    <span class="demo-switcher-label">Pages:</span>
+    <a href="index.html" class="demo-switcher-btn">Landing</a>
+    <a href="login.html" class="demo-switcher-btn">Login</a>
+    <a href="student-dashboard.html" class="demo-switcher-btn">Student</a>
+    <a href="faculty-dashboard.html" class="demo-switcher-btn">Faculty</a>
+    <a href="admin-dashboard.html" class="demo-switcher-btn active">Admin</a>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- ==========================================================================
+       CHART.JS INITIALIZATION SCRIPT
+       ========================================================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initCharts();
+    });
+
+    let overviewChartInstance = null;
+    let facultyChartInstance = null;
+
+    function initCharts() {
+      // Global Chart.js typography & styling defaults
+      Chart.defaults.font.family = "'Inter', -apple-system, sans-serif";
+      Chart.defaults.font.size = 12;
+      Chart.defaults.color = '#64748B';
+
+      // -------------------------------------------------------------
+      // 1. Feedback Overview (Line Chart)
+      // -------------------------------------------------------------
+      const ctxOverview = document.getElementById('feedbackOverviewChart');
+      if (ctxOverview) {
+        overviewChartInstance = new Chart(ctxOverview, {
+          type: 'line',
+          data: {
+            labels: ['April', 'May', 'June', 'July', 'August', 'September'],
+            datasets: [{
+              label: 'Total Responses',
+              data: [620, 780, 910, 1040, 1180, 1248],
+              borderColor: '#2563EB',
+              backgroundColor: 'rgba(37, 99, 235, 0.08)',
+              borderWidth: 2.5,
+              tension: 0.35,
+              fill: true,
+              pointBackgroundColor: '#2563EB',
+              pointRadius: 4,
+              pointHoverRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#0F172A',
+                titleColor: '#FFFFFF',
+                bodyColor: '#93C5FD',
+                padding: 10,
+                cornerRadius: 8
+              }
+            },
+            scales: {
+              x: { grid: { display: false } },
+              y: { 
+                grid: { color: '#F1F5F9' },
+                ticks: { stepSize: 300 }
+              }
+            }
+          }
+        });
+      }
+
+      // -------------------------------------------------------------
+      // 2. Category-wise Feedback (Bar Chart)
+      // -------------------------------------------------------------
+      const ctxCategory = document.getElementById('categoryVolumeChart');
+      if (ctxCategory) {
+        new Chart(ctxCategory, {
+          type: 'bar',
+          data: {
+            labels: ['Course', 'Faculty', 'Infrastructure', 'Hostel', 'Library', 'Activities'],
+            datasets: [{
+              label: 'Number of Responses',
+              data: [420, 546, 360, 290, 210, 390],
+              backgroundColor: '#1E293B',
+              hoverBackgroundColor: '#2563EB',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#0F172A',
+                titleColor: '#FFFFFF',
+                padding: 10,
+                cornerRadius: 8
+              }
+            },
+            scales: {
+              x: { grid: { display: false } },
+              y: { 
+                grid: { color: '#F1F5F9' },
+                ticks: { stepSize: 150 }
+              }
+            }
+          }
+        });
+      }
+
+      // -------------------------------------------------------------
+      // 3. Average Rating by Category (Bar Chart with lower rating colors)
+      // -------------------------------------------------------------
+      const ctxRating = document.getElementById('categoryRatingChart');
+      if (ctxRating) {
+        new Chart(ctxRating, {
+          type: 'bar',
+          data: {
+            labels: ['Course', 'Faculty', 'Infrastructure', 'Hostel', 'Library', 'Activities'],
+            datasets: [{
+              label: 'Average Rating (out of 5)',
+              data: [4.2, 4.5, 3.6, 3.2, 4.0, 4.3],
+              // Lower ratings (Infrastructure 3.6, Hostel 3.2) easily identified in Amber and Red
+              backgroundColor: [
+                '#3B82F6', // Course: 4.2
+                '#2563EB', // Faculty: 4.5
+                '#F59E0B', // Infrastructure: 3.6 (Attention)
+                '#EF4444', // Hostel: 3.2 (Warning/Low)
+                '#3B82F6', // Library: 4.0
+                '#3B82F6'  // Activities: 4.3
+              ],
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `Rating: ${context.parsed.y} / 5.0`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: { grid: { display: false } },
+              y: { 
+                min: 0,
+                max: 5,
+                ticks: { stepSize: 1 }
+              }
+            }
+          }
+        });
+      }
+
+      // -------------------------------------------------------------
+      // 4. Complaint Status (Donut Chart)
+      // -------------------------------------------------------------
+      const ctxComplaint = document.getElementById('complaintStatusChart');
+      if (ctxComplaint) {
+        new Chart(ctxComplaint, {
+          type: 'doughnut',
+          data: {
+            labels: ['Resolved (58%)', 'In Progress (24%)', 'Pending (12%)', 'Escalated (6%)'],
+            datasets: [{
+              data: [58, 24, 12, 6],
+              backgroundColor: [
+                '#10B981', // Resolved (Green)
+                '#F59E0B', // In Progress (Yellow)
+                '#EF4444', // Pending (Red)
+                '#334155'  // Escalated (Dark/Charcoal)
+              ],
+              borderWidth: 2,
+              borderColor: '#FFFFFF'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '68%',
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { boxWidth: 10, padding: 12, font: { size: 11 } }
+              }
+            }
+          }
+        });
+      }
+
+      // -------------------------------------------------------------
+      // 5. Complaint Priority (Horizontal Bar Chart)
+      // -------------------------------------------------------------
+      const ctxPriority = document.getElementById('complaintPriorityChart');
+      if (ctxPriority) {
+        new Chart(ctxPriority, {
+          type: 'bar',
+          data: {
+            labels: ['High', 'Medium', 'Low'],
+            datasets: [{
+              label: 'Complaints',
+              data: [4, 5, 3],
+              backgroundColor: [
+                '#EF4444', // High
+                '#F59E0B', // Medium
+                '#10B981'  // Low
+              ],
+              borderRadius: 6
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              x: { 
+                ticks: { stepSize: 1 },
+                grid: { color: '#F1F5F9' }
+              },
+              y: { grid: { display: false } }
+            }
+          }
+        });
+      }
+
+      // -------------------------------------------------------------
+      // 6. Faculty Performance Overview (Bar Chart)
+      // -------------------------------------------------------------
+      const ctxFaculty = document.getElementById('facultyRatingChart');
+      if (ctxFaculty) {
+        facultyChartInstance = new Chart(ctxFaculty, {
+          type: 'bar',
+          data: {
+            labels: ['Faculty A', 'Faculty B', 'Faculty C', 'Faculty D', 'Faculty E'],
+            datasets: [{
+              label: 'Average Student Rating',
+              data: [4.7, 4.5, 4.4, 4.1, 3.8],
+              backgroundColor: '#2563EB',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) {
+                    return `Score: ${ctx.parsed.y} / 5.0`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: { grid: { display: false } },
+              y: {
+                min: 0,
+                max: 5,
+                ticks: { stepSize: 1 }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Dynamic Filter handlers
+    function updateOverviewTrend(val) {
+      if (!overviewChartInstance) return;
+      if (val === '3m') {
+        overviewChartInstance.data.labels = ['July', 'August', 'September'];
+        overviewChartInstance.data.datasets[0].data = [1040, 1180, 1248];
+      } else if (val === '1y') {
+        overviewChartInstance.data.labels = ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+        overviewChartInstance.data.datasets[0].data = [420, 480, 510, 560, 600, 650, 720, 850, 930, 1040, 1180, 1248];
+      } else {
+        overviewChartInstance.data.labels = ['April', 'May', 'June', 'July', 'August', 'September'];
+        overviewChartInstance.data.datasets[0].data = [620, 780, 910, 1040, 1180, 1248];
+      }
+      overviewChartInstance.update();
+      showToast('Chart Updated', `Displaying feedback trend for: ${val.toUpperCase()}`, 'info');
+    }
+
+    function updateFacultyChart(dept) {
+      if (!facultyChartInstance) return;
+      if (dept === 'cs') {
+        facultyChartInstance.data.labels = ['Dr. Vikram M.', 'Prof. Ananya R.', 'Dr. Rajesh K.', 'Prof. Neha S.'];
+        facultyChartInstance.data.datasets[0].data = [4.8, 4.6, 4.3, 4.1];
+      } else if (dept === 'me') {
+        facultyChartInstance.data.labels = ['Dr. Sunil P.', 'Prof. Harish T.', 'Dr. Devika N.'];
+        facultyChartInstance.data.datasets[0].data = [4.5, 4.2, 3.9];
+      } else {
+        facultyChartInstance.data.labels = ['Faculty A', 'Faculty B', 'Faculty C', 'Faculty D', 'Faculty E'];
+        facultyChartInstance.data.datasets[0].data = [4.7, 4.5, 4.4, 4.1, 3.8];
+      }
+      facultyChartInstance.update();
+      showToast('Faculty Filter', `Filtered ratings by ${dept.toUpperCase()} department.`, 'info');
+    }
+
+  </script>
+</body>
+</html>

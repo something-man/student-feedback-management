@@ -1,0 +1,29 @@
+# Environment & Secrets
+.env
+.env.local
+*.env
+*.pem
+*.key
+
+# Database Files
+*.db
+*.mv.db
+*.trace.db
+backend/data/
+
+# Java & Build Output
+target/
+*.class
+*.jar
+*.war
+
+# Logs
+*.log
+logs/
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

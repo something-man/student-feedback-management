@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard — College Feedback Management System</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body class="dashboard-layout">
+
+  <!-- ==========================================================================
+       LEFT SIDEBAR (Student Portal)
+       ========================================================================== -->
+  <aside class="dashboard-sidebar">
+    <!-- Brand Logo -->
+    <div class="sidebar-brand">
+      <div class="brand-icon-box" style="width:34px; height:34px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+        </svg>
+      </div>
+      <div>
+        <div style="font-family:var(--font-heading); font-weight:800; font-size:0.9375rem; color:var(--navy-900);">College Feedback</div>
+        <div style="font-size:0.6875rem; color:var(--text-muted); font-weight:600;">STUDENT PORTAL</div>
+      </div>
+    </div>
+
+    <!-- Navigation Items -->
+    <div class="sidebar-nav-container">
+      <span class="nav-section-label">Main Menu</span>
+      
+      <a href="student-dashboard.html" class="sidebar-nav-item active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+
+      <a href="#pending-feedback" class="sidebar-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span>Assigned Feedback</span>
+        <span class="nav-badge">3</span>
+      </a>
+
+      <a href="#complaints-section" class="sidebar-nav-item" onclick="openModal('raiseComplaintModal'); return false;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <span>Complaints</span>
+        <span class="nav-badge" style="background:var(--status-yellow-bg); color:var(--status-yellow-text);">2</span>
+      </a>
+
+      <a href="#requests-section" class="sidebar-nav-item" onclick="openModal('raiseRequestModal'); return false;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        <span>Requests</span>
+        <span class="nav-badge" style="background:var(--status-green-bg); color:var(--status-green-text);">1</span>
+      </a>
+
+      <a href="#tracking-section" class="sidebar-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>Track</span>
+      </a>
+
+      <span class="nav-section-label" style="margin-top:16px;">Account</span>
+
+      <a href="#" class="sidebar-nav-item" onclick="showToast('Student Profile', 'Aarav Sharma — Computer Science (Year 3, Sec A)', 'info'); return false;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Profile</span>
+      </a>
+
+      <a href="login.html" class="sidebar-nav-item" onclick="authAPI.logout(); return false;" style="color:var(--status-red-text); margin-top:auto;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span>Logout</span>
+      </a>
+    </div>
+
+    <!-- Student User Meta Footer -->
+    <div class="sidebar-user-footer">
+      <div class="sidebar-user-info">
+        <div class="user-avatar-circle">AS</div>
+        <div class="user-text-meta">
+          <div class="user-display-name">Aarav Sharma</div>
+          <div class="user-role-sub">Roll No: CS-2024-042</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       MAIN DASHBOARD CONTENT
+       ========================================================================== -->
+  <div class="dashboard-main">
+    <!-- Topbar -->
+    <header class="dashboard-topbar">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button id="mobileSidebarToggle" class="btn btn-secondary btn-icon" style="display:none;" aria-label="Toggle Navigation">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="topbar-search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-light);">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" placeholder="Search forms, complaints, ticket #...">
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="btn btn-secondary btn-sm" onclick="openModal('raiseComplaintModal')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Raise Complaint
+        </button>
+        <button class="btn btn-accent btn-sm" onclick="openModal('raiseRequestModal')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          New Request
+        </button>
+
+        <!-- Notification Bell -->
+        <button class="btn btn-ghost btn-icon" style="position:relative;" onclick="openNotificationsModal()" aria-label="Notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span id="topbarUnreadDot" style="display:none; position:absolute; top:6px; right:6px; width:8px; height:8px; background:var(--status-red-dot); border-radius:50%; border:2px solid #FFFFFF;"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Dashboard Content Body -->
+    <main class="dashboard-body">
+      <!-- Welcome Header -->
+      <div class="welcome-header">
+        <div>
+          <h1>Welcome, Student!</h1>
+          <p>Manage your feedback, complaints and requests.</p>
+        </div>
+        <div style="font-size:0.8125rem; font-weight:600; color:var(--text-muted); background:var(--bg-card); padding:8px 14px; border-radius:var(--radius-full); border:1px solid var(--border-subtle);">
+          📅 Fall Term 2026 • Computer Science Dept.
+        </div>
+      </div>
+
+      <!-- Top Summary Cards (4 Cards) -->
+      <div class="summary-cards-grid">
+        <!-- 1. Assigned Feedback -->
+        <div class="summary-card">
+          <div class="summary-card-info">
+            <h4>Assigned Feedback</h4>
+            <div class="summary-value">3 Pending</div>
+            <div class="summary-meta" style="color:var(--blue-600);">
+              <span>⚡ Action required</span>
+            </div>
+          </div>
+          <div class="summary-icon-box summary-icon-blue">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 2. Complaints -->
+        <div class="summary-card">
+          <div class="summary-card-info">
+            <h4>Complaints</h4>
+            <div class="summary-value">2 Active</div>
+            <div class="summary-meta" style="color:var(--status-yellow-text);">
+              <span>🟡 1 Under Review</span>
+            </div>
+          </div>
+          <div class="summary-icon-box summary-icon-yellow">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 3. Requests -->
+        <div class="summary-card">
+          <div class="summary-card-info">
+            <h4>Requests</h4>
+            <div class="summary-value">1 Pending</div>
+            <div class="summary-meta" style="color:var(--status-purple-text);">
+              <span>⏳ Assigned to Library Cell</span>
+            </div>
+          </div>
+          <div class="summary-icon-box summary-icon-purple">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 4. Track Status -->
+        <div class="summary-card" style="cursor:pointer;" onclick="showToast('Status Overview', '1 Request resolved this week. No critical blockers.', 'success')">
+          <div class="summary-card-info">
+            <h4>Track Status</h4>
+            <div class="summary-value" style="font-size:1.3rem;">View Updates</div>
+            <div class="summary-meta" style="color:var(--status-green-text);">
+              <span>🟢 1 Resolved recently</span>
+            </div>
+          </div>
+          <div class="summary-icon-box summary-icon-green">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Section: Pending Feedback -->
+      <section class="dashboard-section" id="pending-feedback">
+        <div class="section-title-bar">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue-600);">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            Pending Feedback
+          </h3>
+          <span class="badge badge-blue">3 Assigned to You</span>
+        </div>
+
+        <div class="feedback-cards-stack">
+          <!-- Feedback Card 1 -->
+          <div class="feedback-item-card">
+            <div class="feedback-item-main">
+              <div class="feedback-item-title">Data Science – Faculty Feedback</div>
+              <div class="feedback-meta-row">
+                <span class="meta-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  Assigned by: <strong>Faculty (Dr. Vikram Malhotra)</strong>
+                </span>
+                <span>•</span>
+                <span class="meta-pill" style="color:var(--status-yellow-text); font-weight:600;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  Deadline: 15 Sept 2026
+                </span>
+              </div>
+            </div>
+            <button class="btn btn-accent btn-sm" onclick="openRespondModal('Data Science – Faculty Feedback', 'Dr. Vikram Malhotra', 'Faculty')">
+              Respond
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+
+          <!-- Feedback Card 2 -->
+          <div class="feedback-item-card">
+            <div class="feedback-item-main">
+              <div class="feedback-item-title">Infrastructure Feedback</div>
+              <div class="feedback-meta-row">
+                <span class="meta-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  Assigned by: <strong>Admin (Campus Facilities Cell)</strong>
+                </span>
+                <span>•</span>
+                <span class="meta-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  Deadline: 18 Sept 2026
+                </span>
+              </div>
+            </div>
+            <button class="btn btn-accent btn-sm" onclick="openRespondModal('Infrastructure Feedback', 'Campus Facilities Cell', 'Admin')">
+              Respond
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+
+          <!-- Feedback Card 3 -->
+          <div class="feedback-item-card">
+            <div class="feedback-item-main">
+              <div class="feedback-item-title">Elective Course Review: AI & Machine Learning</div>
+              <div class="feedback-meta-row">
+                <span class="meta-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  Assigned by: <strong>Faculty (Dept. Board)</strong>
+                </span>
+                <span>•</span>
+                <span class="meta-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  Deadline: 22 Sept 2026
+                </span>
+              </div>
+            </div>
+            <button class="btn btn-accent btn-sm" onclick="openRespondModal('Elective Course Review: AI & Machine Learning', 'Dept. Academic Board', 'Faculty')">
+              Respond
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Recent Complaints & Requests -->
+      <section class="dashboard-section" id="tracking-section">
+        <div class="section-title-bar">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--navy-900);">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            Recent Complaints & Requests
+          </h3>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary btn-sm" onclick="showToast('Filter Applied', 'Viewing all active and resolved student tickets.', 'info')">
+              View All
+            </button>
+          </div>
+        </div>
+
+        <div class="custom-table-container">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Ticket ID</th>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Subject</th>
+                <th>Status</th>
+                <th>Last Update</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="7" style="text-align:center; padding:24px; color:var(--text-muted);">
+                  Loading recent complaints and requests...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: RESPOND TO FEEDBACK
+       ========================================================================== -->
+  <div class="modal-overlay" id="respondFeedbackModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3 id="modalFormTitle">Respond to Feedback</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted);" id="modalFormMeta">Assigned by Faculty</div>
+        </div>
+        <button class="btn btn-ghost btn-icon" data-close-modal aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="background:var(--blue-50); border:1px solid var(--blue-100); border-radius:var(--radius-md); padding:12px 16px; margin-bottom:20px; font-size:0.8125rem; color:var(--blue-600); display:flex; align-items:center; gap:8px;">
+          <span>🔒 Responses are processed confidentially to ensure open and honest feedback.</span>
+        </div>
+
+        <!-- Question 1: Rating -->
+        <div class="form-group">
+          <label class="form-label">1. Overall Satisfaction Rating</label>
+          <div class="star-rating-input">
+            <span class="selected">★</span>
+            <span class="selected">★</span>
+            <span class="selected">★</span>
+            <span class="selected">★</span>
+            <span>☆</span>
+          </div>
+          <small style="color:var(--text-muted); font-size:0.75rem; margin-top:4px; display:block;">Click stars to adjust score (4 / 5)</small>
+        </div>
+
+        <!-- Question 2: Specific Criteria -->
+        <div class="form-group">
+          <label class="form-label">2. Quality & Clarity of Instruction</label>
+          <select class="form-control">
+            <option>Excellent — Very clear explanations & examples</option>
+            <option>Good — Understandable with minor questions</option>
+            <option>Average — Requires more practical demonstrations</option>
+            <option>Needs Improvement</option>
+          </select>
+        </div>
+
+        <!-- Question 3: Comments -->
+        <div class="form-group">
+          <label class="form-label">3. Constructive Remarks / Suggestions</label>
+          <textarea class="form-control" rows="3" placeholder="Share specific recommendations for syllabus pace, lab support, or course materials..."></textarea>
+        </div>
+
+        <!-- Anonymous Toggle -->
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="checkbox-label">
+            <input type="checkbox" checked style="accent-color:var(--blue-600);">
+            <span style="font-size:0.875rem;">Submit anonymously (Hide Student ID from instructor)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+        <button type="button" class="btn btn-accent" onclick="submitFeedbackResponse()">
+          Submit Response
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: RAISE COMPLAINT
+       ========================================================================== -->
+  <div class="modal-overlay" id="raiseComplaintModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3>Raise a Complaint</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Institutional grievance tracking &amp; resolution workflow</div>
+        </div>
+        <button class="btn btn-ghost btn-icon" data-close-modal aria-label="Close">✕</button>
+      </div>
+
+      <form onsubmit="submitComplaint(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Category <span style="color:red;">*</span></label>
+            <select class="form-control" id="complaintCategory" required>
+              <option value="INFRASTRUCTURE">Infrastructure (Classrooms, AC, Projectors, Labs)</option>
+              <option value="HOSTEL">Hostel &amp; Accommodation</option>
+              <option value="ACADEMIC">Academic Schedule, Exams &amp; Faculty</option>
+              <option value="LIBRARY">Library &amp; Digital Learning Resources</option>
+              <option value="IT">IT, Wi-Fi &amp; Computer Networks</option>
+              <option value="TRANSPORT">College Transport &amp; Bus Services</option>
+              <option value="OTHER">Other Institution Issues</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Subject / Title <span style="color:red;">*</span></label>
+            <input type="text" id="complaintSubject" class="form-control" placeholder="Brief summary of the issue..." required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Priority Level <span style="color:red;">*</span></label>
+            <select class="form-control" id="complaintPriority">
+              <option value="MEDIUM">Medium — Standard 48h turnaround</option>
+              <option value="HIGH">High — Immediate operational attention</option>
+              <option value="CRITICAL">Critical — Urgent safety or facility failure</option>
+              <option value="LOW">Low — General maintenance / Minor fix</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Detailed Description <span style="color:red;">*</span></label>
+            <textarea id="complaintDescription" class="form-control" rows="3" placeholder="Describe the location, room number, date, and specifics..." required></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Complaint</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: RAISE REQUEST
+       ========================================================================== -->
+  <div class="modal-overlay" id="raiseRequestModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3>Submit a Service Request</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted);">Administrative and facility request processing</div>
+        </div>
+        <button class="btn btn-ghost btn-icon" data-close-modal aria-label="Close">✕</button>
+      </div>
+
+      <form onsubmit="submitRequest(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Request Category <span style="color:red;">*</span></label>
+            <select class="form-control" id="requestCategory" required>
+              <option value="DOCUMENT">Document &amp; Bonafide Certificates</option>
+              <option value="LIBRARY">Library &amp; Digital Book Access</option>
+              <option value="ACADEMIC">Academic Electives &amp; Course Permissions</option>
+              <option value="FACILITY">Sports, Auditorium &amp; Common Room Access</option>
+              <option value="HOSTEL">Hostel Room &amp; Amenity Permissions</option>
+              <option value="TRANSPORT">Transport Route &amp; Pass Request</option>
+              <option value="GENERAL">General Administrative Request</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Request Title <span style="color:red;">*</span></label>
+            <input type="text" id="requestTitle" class="form-control" placeholder="e.g. Bonafide certificate for internship" required>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Details &amp; Justification <span style="color:red;">*</span></label>
+            <textarea id="requestDetails" class="form-control" rows="3" placeholder="Explain the purpose and duration needed..." required></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-accent">Submit Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: TRACK ISSUE PROGRESS & DYNAMIC TIMELINE (Student)
+       ========================================================================== -->
+  <div class="modal-overlay" id="trackIssueModal">
+    <div class="modal-box" style="max-width: 640px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="trackModalTicketNumber">Track Ticket #102</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted);" id="trackModalMeta">Category: Infrastructure • Lodged 2 days ago</div>
+        </div>
+        <button class="btn btn-ghost btn-icon" data-close-modal aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Summary Cards Row -->
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px;">
+          <div style="background:var(--bg-subtle); padding:10px 12px; border-radius:var(--radius-sm);">
+            <div style="font-size:0.6875rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Current Status</div>
+            <div id="trackModalStatusBadge" style="margin-top:4px;"><span class="badge badge-yellow">Pending</span></div>
+          </div>
+          <div style="background:var(--bg-subtle); padding:10px 12px; border-radius:var(--radius-sm);">
+            <div style="font-size:0.6875rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Priority</div>
+            <div id="trackModalPriorityBadge" style="margin-top:4px;"><span class="badge badge-red">High</span></div>
+          </div>
+          <div style="background:var(--bg-subtle); padding:10px 12px; border-radius:var(--radius-sm);">
+            <div style="font-size:0.6875rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Assigned Cell</div>
+            <div id="trackModalAssignedCell" style="margin-top:4px; font-size:0.8125rem; font-weight:700; color:var(--navy-900);">IT Dept</div>
+          </div>
+        </div>
+
+        <!-- Issue Subject & Details -->
+        <div class="form-group">
+          <label class="form-label" style="margin-bottom:4px;">Subject / Title</label>
+          <div id="trackModalTitle" style="font-weight:700; color:var(--navy-900); font-size:0.9375rem;">Lab 3 AC Malfunction</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="margin-bottom:4px;">Description</label>
+          <div id="trackModalDescription" style="background:var(--bg-subtle); padding:10px 14px; border-radius:var(--radius-sm); font-size:0.8125rem; color:var(--text-secondary);">
+            Projector display flickering intermittently in CS Lab 3.
+          </div>
+        </div>
+
+        <!-- Timeline Section -->
+        <div>
+          <label class="form-label" style="margin-bottom:6px;">Status Progress &amp; Audit Trail</label>
+          <div class="issue-timeline" id="trackTimelineList">
+            <!-- Dynamic timeline steps loaded via JS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 4: NOTIFICATIONS MANAGEMENT DRAWER (Student)
+       ========================================================================== -->
+  <div class="modal-overlay" id="notificationsModal">
+    <div class="modal-box" style="max-width: 560px;">
+      <div class="modal-header">
+        <div>
+          <h3>🔔 Notifications</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted);" id="notificationsModalSubtitle">Feedback assignments &amp; ticket updates</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="markAllNotificationsAsRead()" style="font-size:0.75rem;">
+            Mark All Read
+          </button>
+          <button class="btn btn-ghost btn-icon" data-close-modal aria-label="Close">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div id="notificationsListContainer" style="max-height:60vh; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+          <div style="text-align:center; padding:24px; color:var(--text-muted);">
+            Loading notifications...
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Demo HUD -->
+  <div class="demo-switcher-hud">
+    <span class="demo-switcher-label">Pages:</span>
+    <a href="index.html" class="demo-switcher-btn">Landing</a>
+    <a href="login.html" class="demo-switcher-btn">Login</a>
+    <a href="student-dashboard.html" class="demo-switcher-btn active">Student</a>
+    <a href="faculty-dashboard.html" class="demo-switcher-btn">Faculty</a>
+    <a href="admin-dashboard.html" class="demo-switcher-btn">Admin</a>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
